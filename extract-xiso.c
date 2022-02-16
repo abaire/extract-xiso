@@ -643,6 +643,10 @@ int main( int argc, char **argv ) {
 	bool			extract = true, rewrite = false, free_user = false, free_pass = false, x_seen = false, delete = false, optimized;
 	char		   *cwd = nil, *path = nil, *buf = nil, *new_iso_path = nil, tag[ XISO_OPTIMIZED_TAG_LENGTH * sizeof(long) ];
 
+        if ( sizeof(void*) != 4 ) {
+		fprintf( stderr, "WARNING: extract-xiso built in non-32-bit mode. Known to create malformed ISOs!\n" );
+        }
+        
 	if ( argc < 2 ) { usage(); exit( 1 ); }
 	
 	while ( ! err && ( opt_char = getopt( argc, argv, GETOPT_STRING ) ) != -1 ) {

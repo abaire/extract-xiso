@@ -34,6 +34,8 @@ jobs:
       fail-fast: false
       matrix:
         configuration: [Release, Debug]
+        # Note: x64 builds are forced to produce 32-bit binaries.
+        # See #29
         arch: [x86, x64]
         include:
           - arch: x86
@@ -130,9 +132,12 @@ jobs:
         # pushd dist/extract-xiso_Win64_Debug
         # zip -r ../extract-xiso-win64-debug.zip *
         # popd
-        # pushd dist/extract-xiso_macOS
-        # zip -r ../extract-xiso-macos.zip *
-        # popd
+        pushd dist/extract-xiso_macOS
+        zip -r ../extract-xiso-macos.zip *
+        popd
+        pushd dist/extract-xiso_Linux
+        zip -r ../extract-xiso-linux.zip *
+        popd
     - name: Get package info
       run: |
         echo "BUILD_TAG=$(cat dist/tag/tag)" >> $GITHUB_ENV
@@ -189,13 +194,23 @@ jobs:
     #     asset_name: extract-xiso-win64-debug.zip
     #     asset_path: dist/extract-xiso-win64-debug.zip
     #     asset_content_type: application/zip
-    # - name: Upload release assets (macOS build)
-    #   id: upload-release-assets-macos-release
-    #   uses: actions/upload-release-asset@v1.0.1
-    #   env:
-    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    #   with:
-    #     upload_url: ${{ steps.create_release.outputs.upload_url }}
-    #     asset_name: extract-xiso-macos.zip
-    #     asset_path: dist/extract-xiso-macos.zip
-    #     asset_content_type: application/zip
+    - name: Upload release assets (macOS build)
+      id: upload-release-assets-macos-release
+      uses: actions/upload-release-asset@v1.0.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_name: extract-xiso-macos.zip
+        asset_path: dist/extract-xiso-macos.zip
+        asset_content_type: application/zip
+    - name: Upload release assets (Linux build)
+      id: upload-release-assets-linux-release
+      uses: actions/upload-release-asset@v1.0.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_name: extract-xiso-linux.zip
+        asset_path: dist/extract-xiso-linux.zip
+        asset_content_type: application/zip

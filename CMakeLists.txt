@@ -5,6 +5,7 @@ string(TOUPPER __${CMAKE_SYSTEM_NAME}__ TARGET_OS)
 
 set(SOURCE_FILES
 	extract-xiso.c
+	extract-xiso.h
 )
 
 add_executable(extract-xiso ${SOURCE_FILES})
